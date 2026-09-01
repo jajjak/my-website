@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="CCKP China Police equipment & cosplay community — unofficial fan community." />
+  <title>CCKP | China Police Community</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root{
+      --bg:#07111f; --panel:#0d1c2d; --panel2:#10243a; --text:#f4f7fb;
+      --muted:#aebdcb; --accent:#30a4ff; --accent2:#75c8ff; --line:rgba(255,255,255,.10);
+      --shadow:0 22px 80px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; color:var(--text); background:
+      radial-gradient(circle at 80% 10%,rgba(48,164,255,.15),transparent 35%),
+      linear-gradient(180deg,#06101d 0%,#091827 55%,#07111f 100%);
+      font-family:Inter,system-ui,-apple-system,"Segoe UI","Noto Sans SC","Microsoft YaHei",sans-serif;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{width:min(1160px,calc(100% - 40px));margin:auto}
+    header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(14px); background:rgba(5,15,27,.78); border-bottom:1px solid var(--line)
+    }
+    nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.08em}
+    .brand img{width:38px;height:38px}
+    .navlinks{display:flex;align-items:center;gap:24px;color:#d9e5ef;font-size:14px}
+    .lang{display:flex;gap:8px}
+    .lang button{
+      color:var(--text);background:transparent;border:1px solid var(--line);
+      border-radius:999px;padding:8px 11px;cursor:pointer
+    }
+    .lang button.active{background:var(--accent);border-color:var(--accent);color:#04101b;font-weight:800}
+    .hero{padding:90px 0 70px;min-height:74vh;display:grid;align-items:center}
+    .heroGrid{display:grid;grid-template-columns:1.18fr .82fr;gap:48px;align-items:center}
+    .eyebrow{color:var(--accent2);font-weight:800;letter-spacing:.16em;font-size:13px;margin-bottom:18px}
+    h1{font-size:clamp(42px,7vw,82px);line-height:.98;margin:0 0 24px;letter-spacing:-.055em}
+    .lead{max-width:730px;color:#c5d2dd;font-size:clamp(18px,2.2vw,23px);line-height:1.7}
+    .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 20px;border-radius:12px;font-weight:800}
+    .primary{background:var(--accent);color:#03101c;box-shadow:0 12px 32px rgba(48,164,255,.24)}
+    .secondary{border:1px solid var(--line);background:rgba(255,255,255,.03)}
+    .visual{
+      position:relative;min-height:420px;border:1px solid var(--line);border-radius:26px;overflow:hidden;
+      background:
+      linear-gradient(145deg,rgba(48,164,255,.22),transparent 42%),
+      repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 38px),
+      repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 38px),
+      #0a1b2c; box-shadow:var(--shadow)
+    }
+    .visual:before{
+      content:"CCKP";position:absolute;right:-12px;bottom:-28px;font-size:118px;font-weight:950;
+      color:rgba(255,255,255,.045);letter-spacing:-.08em
+    }
+    .card{
+      position:absolute;left:30px;right:30px;top:48px;padding:26px;border-radius:20px;
+      background:rgba(6,16,28,.72);border:1px solid var(--line);backdrop-filter:blur(8px)
+    }
+    .status{display:flex;align-items:center;gap:10px;color:#d8e7f2;font-size:14px}
+    .dot{width:9px;height:9px;background:#58e38a;border-radius:50%;box-shadow:0 0 18px #58e38a}
+    .card h3{font-size:28px;margin:18px 0 10px}
+    .card p{color:var(--muted);line-height:1.75;margin:0}
+    section{padding:76px 0}
+    .sectionTitle{font-size:clamp(30px,4vw,48px);margin:0 0 14px;letter-spacing:-.035em}
+    .sectionLead{color:var(--muted);max-width:760px;line-height:1.8;margin-bottom:34px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .feature{padding:26px;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px}
+    .num{color:var(--accent2);font-weight:900;font-size:13px;letter-spacing:.14em}
+    .feature h3{margin:14px 0 10px;font-size:21px}
+    .feature p{margin:0;color:var(--muted);line-height:1.75}
+    .join{
+      margin:40px 0 70px;padding:38px;border:1px solid rgba(117,200,255,.3);border-radius:24px;
+      background:linear-gradient(135deg,rgba(48,164,255,.16),rgba(255,255,255,.025))
+    }
+    .join h2{margin:0 0 12px;font-size:clamp(30px,4vw,48px)}
+    .join p{color:#c7d7e4;line-height:1.8;max-width:800px}
+    .notice{font-size:13px;color:#91a5b7;border-top:1px solid var(--line);padding:25px 0 38px;line-height:1.7}
+    footer{border-top:1px solid var(--line);color:#8fa2b4}
+    @media(max-width:860px){
+      .navlinks{display:none}.heroGrid{grid-template-columns:1fr}.visual{min-height:320px}.grid3{grid-template-columns:1fr}
+      .hero{padding-top:62px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#top"><img src="icon.svg" alt="CCKP icon"><span>CCKP</span></a>
+      <div class="navlinks">
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a href="#community" data-i18n="navCommunity">Community</a>
+        <a href="#join" data-i18n="navJoin">Join</a>
+      </div>
+      <div class="lang">
+        <button id="enBtn" class="active" type="button">EN</button>
+        <button id="zhBtn" type="button">中文</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap heroGrid">
+      <div>
+        <div class="eyebrow">CCKP • COMMUNITY</div>
+        <h1 data-i18n="heroTitle">Connect. Share. Build the community.</h1>
+        <p class="lead" data-i18n="heroLead">
+          Hello everyone! I’m the technical staff member of CCKP China Police Community.
+          We are currently welcoming new members from around the world.
+        </p>
+        <div class="cta">
+          <a class="btn primary" target="_blank" rel="noopener noreferrer"
+             href="https://www.instagram.com/xyxy2178887_110?igsi=MXIxOGpsNWh4OHRiaw=="
+             data-i18n="instagramBtn">Visit Instagram</a>
+          <a class="btn secondary" href="#about" data-i18n="learnBtn">Learn more</a>
+        </div>
+      </div>
+      <div class="visual" aria-hidden="true">
+        <div class="card">
+          <div class="status"><span class="dot"></span><span data-i18n="status">Member recruitment is open</span></div>
+          <h3 data-i18n="cardTitle">CCKP Global Community</h3>
+          <p data-i18n="cardText">A place for enthusiasts to connect, share collections, discuss equipment and enjoy community activities.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="eyebrow" data-i18n="aboutEyebrow">ABOUT CCKP</div>
+      <h2 class="sectionTitle" data-i18n="aboutTitle">A community built around a shared interest.</h2>
+      <p class="sectionLead" data-i18n="aboutText">
+        CCKP is an unofficial fan community for people interested in China Police-related equipment,
+        uniforms, collections and cosplay. We aim to create a friendly international space for sharing and交流.
+      </p>
+      <div class="grid3" id="community">
+        <article class="feature"><div class="num">POINT 01</div><h3 data-i18n="f1t">International</h3><p data-i18n="f1p">English and Chinese are supported so members from different regions can participate more easily.</p></article>
+        <article class="feature"><div class="num">POINT 02</div><h3 data-i18n="f2t">Community First</h3><p data-i18n="f2p">Share collections, photos, knowledge and hobby activities while respecting other members.</p></article>
+        <article class="feature"><div class="num">POINT 03</div><h3 data-i18n="f3t">Recruiting</h3><p data-i18n="f3p">We are looking for new members. Contact us through Instagram for details about joining.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="join">
+    <div class="wrap">
+      <div class="join">
+        <div class="eyebrow" data-i18n="joinEyebrow">JOIN THE COMMUNITY</div>
+        <h2 data-i18n="joinTitle">Interested in CCKP?</h2>
+        <p data-i18n="joinText">Applications and participation are welcome. Please contact us on Instagram for details.</p>
+        <div class="cta">
+          <a class="btn primary" target="_blank" rel="noopener noreferrer"
+             href="https://www.instagram.com/xyxy2178887_110?igsi=MXIxOGpsNWh4OHRiaw=="
+             data-i18n="contactBtn">Contact on Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="notice" data-i18n="notice">
+      CCKP is an unofficial hobby/fan community and is not affiliated with, endorsed by, or representative of any government, police agency, or public authority. Do not use this community or its materials to impersonate officials.
+    </div>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  en: {
+    navAbout:"About", navCommunity:"Community", navJoin:"Join",
+    heroTitle:"Connect. Share. Build the community.",
+    heroLead:"Hello everyone! I’m the technical staff member of CCKP China Police Community. We are currently welcoming new members from around the world.",
+    instagramBtn:"Visit Instagram", learnBtn:"Learn more",
+    status:"Member recruitment is open", cardTitle:"CCKP Global Community",
+    cardText:"A place for enthusiasts to connect, share collections, discuss equipment and enjoy community activities.",
+    aboutEyebrow:"ABOUT CCKP", aboutTitle:"A community built around a shared interest.",
+    aboutText:"CCKP is an unofficial fan community for people interested in China Police-related equipment, uniforms, collections and cosplay. We aim to create a friendly international space for sharing and communication.",
+    f1t:"International", f1p:"English and Chinese are supported so members from different regions can participate more easily.",
+    f2t:"Community First", f2p:"Share collections, photos, knowledge and hobby activities while respecting other members.",
+    f3t:"Recruiting", f3p:"We are looking for new members. Contact us through Instagram for details about joining.",
+    joinEyebrow:"JOIN THE COMMUNITY", joinTitle:"Interested in CCKP?",
+    joinText:"Applications and participation are welcome. Please contact us on Instagram for details.",
+    contactBtn:"Contact on Instagram",
+    notice:"CCKP is an unofficial hobby/fan community and is not affiliated with, endorsed by, or representative of any government, police agency, or public authority. Do not use this community or its materials to impersonate officials."
+  },
+  zh: {
+    navAbout:"关于我们", navCommunity:"社群", navJoin:"加入我们",
+    heroTitle:"连接彼此，分享热爱，共建社群。",
+    heroLead:"大家好！我是 CCKP 中国POLICE爱好者社群的技术负责人。我们正在面向海外招募新成员，欢迎大家申请并参与。",
+    instagramBtn:"访问 Instagram", learnBtn:"了解更多",
+    status:"成员招募中", cardTitle:"CCKP 国际社群",
+    cardText:"为爱好者提供交流、分享收藏、讨论装备与参与兴趣活动的国际社群。",
+    aboutEyebrow:"关于 CCKP", aboutTitle:"因共同兴趣而连接的社群。",
+    aboutText:"CCKP 是一个非官方兴趣爱好者社群，面向对中国警察相关装备、制服、收藏及角色扮演感兴趣的人士。我们希望打造一个友好、国际化的交流空间。",
+    f1t:"国际交流", f1p:"网站支持英语和中文，方便不同地区的成员参与交流。",
+    f2t:"社群优先", f2p:"在互相尊重的基础上分享收藏、照片、知识和兴趣活动。",
+    f3t:"成员招募", f3p:"目前正在招募新成员。加入方式及详细信息请通过 Instagram 联系我们。",
+    joinEyebrow:"加入社群", joinTitle:"想加入 CCKP？",
+    joinText:"欢迎申请和参与。详情请通过 Instagram 与我们联系。",
+    contactBtn:"通过 Instagram 联系",
+    notice:"CCKP 为非官方兴趣/爱好者社群，与任何政府、公安机关、警察机构或其他公共机关均无隶属、授权或代表关系。请勿利用本社群或相关素材冒充公职人员。"
+  }
+};
+
+function setLang(lang){
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key=el.dataset.i18n;
+    if(translations[lang][key]) el.textContent=translations[lang][key];
+  });
+  document.getElementById("enBtn").classList.toggle("active",lang==="en");
+  document.getElementById("zhBtn").classList.toggle("active",lang==="zh");
+  localStorage.setItem("cckp-lang",lang);
+}
+document.getElementById("enBtn").onclick=()=>setLang("en");
+document.getElementById("zhBtn").onclick=()=>setLang("zh");
+setLang(localStorage.getItem("cckp-lang") || "en");
+</script>
+</body>
+</html>
