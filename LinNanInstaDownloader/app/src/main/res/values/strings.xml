@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">林男 Insta Downloader</string>
+
+    <!-- Home -->
+    <string name="home_title">Instagramを保存</string>
+    <string name="home_subtitle">写真・動画・リールを高画質で保存</string>
+    <string name="home_url_placeholder">InstagramのURLを貼り付け</string>
+    <string name="action_paste">貼り付け</string>
+    <string name="action_analyze">解析する</string>
+    <string name="action_clear">クリア</string>
+
+    <!-- Analyzing -->
+    <string name="analyzing_title">投稿を解析しています…</string>
+    <string name="analyzing_subtitle">Instagramへ接続して情報を取得しています</string>
+
+    <!-- Result -->
+    <string name="result_type_photo">写真</string>
+    <string name="result_type_video">動画</string>
+    <string name="result_type_reel">リール</string>
+    <string name="result_type_carousel">カルーセル投稿</string>
+    <string name="result_save_best">最高画質で保存</string>
+    <string name="result_save_all">すべて保存</string>
+    <string name="result_save_one">保存</string>
+    <string name="result_resolution">解像度</string>
+    <string name="result_file_size">ファイルサイズ</string>
+    <string name="result_owner">投稿者</string>
+    <string name="result_media_count">%1$d件のメディア</string>
+
+    <!-- Download -->
+    <string name="download_title">保存中</string>
+    <string name="download_progress">%1$s / %2$s</string>
+    <string name="download_done_title">保存しました</string>
+    <string name="action_open">開く</string>
+    <string name="action_share">共有</string>
+    <string name="action_close">閉じる</string>
+
+    <!-- History -->
+    <string name="history_title">履歴</string>
+    <string name="history_empty">まだ保存履歴がありません</string>
+
+    <!-- Errors -->
+    <string name="error_title">エラー</string>
+    <string name="action_retry">もう一度試す</string>
+    <string name="error_invalid_url">InstagramのURLを確認してください</string>
+    <string name="error_not_found">投稿が見つかりませんでした</string>
+    <string name="error_private_content">この投稿は非公開またはアクセスできません</string>
+    <string name="error_media_unavailable">この投稿からメディアを取得できませんでした</string>
+    <string name="error_network">ネットワーク接続を確認してください</string>
+    <string name="error_rate_limited">アクセスが集中しています。しばらくしてから再度お試しください</string>
+    <string name="error_invalid_response">保存できるメディアが見つかりませんでした</string>
+    <string name="error_unknown">問題が発生しました。もう一度お試しください</string>
+</resources>
