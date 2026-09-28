@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">林男カメラ</string>
+
+    <!-- 共通 -->
+    <string name="common_ok">OK</string>
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_delete">削除</string>
+    <string name="common_share">共有</string>
+    <string name="common_settings">設定</string>
+    <string name="common_back">戻る</string>
+    <string name="common_retry">再試行</string>
+    <string name="common_allow">許可する</string>
+
+    <!-- モード -->
+    <string name="mode_photo">写真</string>
+    <string name="mode_video">動画</string>
+
+    <!-- 撮影画質 -->
+    <string name="quality_standard">標準</string>
+    <string name="quality_max">最高解像度</string>
+    <string name="quality_label_format">%1$d × %2$d(%3$.1f MP)</string>
+
+    <!-- フラッシュ -->
+    <string name="flash_off">オフ</string>
+    <string name="flash_on">オン</string>
+    <string name="flash_auto">自動</string>
+
+    <!-- タイマー -->
+    <string name="timer_off">タイマーオフ</string>
+    <string name="timer_3s">3秒</string>
+    <string name="timer_5s">5秒</string>
+    <string name="timer_10s">10秒</string>
+
+    <!-- 動画解像度 -->
+    <string name="video_quality_4k">4K</string>
+    <string name="video_quality_1080p">1080p</string>
+    <string name="video_quality_720p">720p</string>
+    <string name="video_fps_format">%1$d fps</string>
+    <string name="video_recording_time_format">%1$02d:%2$02d:%3$02d</string>
+    <string name="video_not_supported_4k">この端末は4K撮影に対応していません。1080pで撮影します。</string>
+    <string name="video_muted_recording">マイク権限がないため、無音で録画します。</string>
+
+    <!-- 撮影/保存 -->
+    <string name="capture_saving">保存しています…</string>
+    <string name="capture_saved">保存しました</string>
+    <string name="capture_failed">保存に失敗しました</string>
+    <string name="capture_storage_full">空き容量が不足しています。不要なファイルを削除してください。</string>
+    <string name="capture_error_generic">撮影中にエラーが発生しました。もう一度お試しください。</string>
+    <string name="capture_raw_unavailable">この端末はRAW撮影に対応していません。</string>
+
+    <!-- 権限 -->
+    <string name="permission_camera_title">カメラへのアクセスが必要です</string>
+    <string name="permission_camera_message">写真や動画を撮影するには、カメラの使用を許可してください。</string>
+    <string name="permission_microphone_title">マイクへのアクセス</string>
+    <string name="permission_microphone_message">動画に音声を含めるには、マイクの使用を許可してください。許可しない場合は無音で録画します。</string>
+    <string name="permission_storage_title">保存先へのアクセスが必要です</string>
+    <string name="permission_storage_message">撮影した写真・動画を端末に保存するために許可が必要です。</string>
+    <string name="permission_denied_settings">設定アプリから許可を有効にしてください。</string>
+    <string name="permission_open_settings">設定を開く</string>
+
+    <!-- ギャラリー -->
+    <string name="gallery_title">ギャラリー</string>
+    <string name="gallery_empty">まだ撮影した写真や動画がありません</string>
+    <string name="gallery_delete_confirm_title">削除しますか？</string>
+    <string name="gallery_delete_confirm_message">この操作は取り消せません。</string>
+    <string name="gallery_delete_done">削除しました</string>
+    <string name="gallery_delete_failed">削除に失敗しました</string>
+    <string name="gallery_share_failed">共有できませんでした</string>
+    <string name="gallery_video_play">再生</string>
+
+    <!-- 設定 -->
+    <string name="settings_title">設定</string>
+    <string name="settings_section_photo">写真</string>
+    <string name="settings_section_video">動画</string>
+    <string name="settings_section_general">一般</string>
+    <string name="settings_section_about">アプリについて</string>
+    <string name="settings_resolution_mode">撮影解像度</string>
+    <string name="settings_raw_capture">RAW＋JPEG保存</string>
+    <string name="settings_raw_capture_desc">対応端末でRAW(DNG)とJPEGを同時に保存します。処理に時間がかかる場合があります。</string>
+    <string name="settings_grid">グリッド表示</string>
+    <string name="settings_grid_desc">構図の目安となる格子線をプレビューに表示します。</string>
+    <string name="settings_hdr">HDR / 撮影拡張</string>
+    <string name="settings_hdr_desc">対応端末でHDR撮影を有効にします。最高解像度と両立できない場合は自動的に無効になります。</string>
+    <string name="settings_hdr_unsupported">この端末はHDR撮影拡張に対応していません。</string>
+    <string name="settings_hdr_conflict">最高解像度設定ではHDRを利用できません。</string>
+    <string name="settings_shutter_sound">シャッター音</string>
+    <string name="settings_haptics">触覚フィードバック</string>
+    <string name="settings_save_location">保存先</string>
+    <string name="settings_save_location_desc">写真は Pictures/林男カメラ、動画は Movies/林男カメラ に保存されます。</string>
+    <string name="settings_video_quality">動画解像度</string>
+    <string name="settings_video_fps">フレームレート</string>
+    <string name="settings_video_stabilization">手ブレ補正</string>
+    <string name="settings_video_stabilization_desc">対応端末で動画撮影時の手ブレを軽減します。</string>
+    <string name="settings_reset">初期設定に戻す</string>
+
+    <!-- 開発者情報 -->
+    <string name="about_app_name">林男カメラ</string>
+    <string name="about_version_format">バージョン %1$s</string>
+    <string name="about_developer_label">開発者</string>
+    <string name="about_developer_name">林男 / Lin Nan</string>
+    <string name="about_description">解像度と画質を最優先に設計されたカメラアプリです。サーバーへの送信やアカウント登録は一切行わず、撮影した写真・動画はすべて端末内に保存されます。</string>
+
+    <!-- カメラ能力表示 -->
+    <string name="capability_sensor_label">センサー公称画素数</string>
+    <string name="capability_available_label">撮影可能な解像度</string>
+    <string name="capability_current_label">現在の設定</string>
+    <string name="capability_low_light_notice">暗所ではノイズ低減のため解像度や明るさが自動調整されることがあります。</string>
+
+    <!-- カメラ切替 -->
+    <string name="camera_switch_front_back">前後カメラ切り替え</string>
+    <string name="camera_lens_select">レンズを選択</string>
+    <string name="camera_lens_wide">広角</string>
+    <string name="camera_lens_ultrawide">超広角</string>
+    <string name="camera_lens_tele">望遠</string>
+    <string name="camera_zoom_format">%.1fx</string>
+
+    <!-- コンテンツ説明 (アクセシビリティ) -->
+    <string name="cd_shutter_button">シャッターボタン</string>
+    <string name="cd_switch_camera">カメラ切り替え</string>
+    <string name="cd_flash_toggle">フラッシュ設定</string>
+    <string name="cd_timer_toggle">タイマー設定</string>
+    <string name="cd_quality_toggle">画質設定</string>
+    <string name="cd_thumbnail">最新の撮影サムネイル</string>
+    <string name="cd_gallery">ギャラリーを開く</string>
+    <string name="cd_settings">設定を開く</string>
+    <string name="cd_exposure_slider">露出補正</string>
+    <string name="cd_mode_switch">撮影モード切り替え</string>
+</resources>
