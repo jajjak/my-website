@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>鬼ごっこ</title>
+<style>
+  html, body { margin: 0; background: #222; color: #fff; text-align: center;
+    font-family: sans-serif; touch-action: none; user-select: none; -webkit-user-select: none;
+    -webkit-touch-callout: none; overscroll-behavior: none; }
+  h2 { margin: 6px 0; font-size: 18px; }
+  canvas { background: #2e7d32; border: 3px solid #fff; box-sizing: border-box;
+    width: 100%; max-width: 600px; height: auto; touch-action: none; display: block; margin: 0 auto; }
+  #dash { margin: 10px auto 4px; width: 160px; height: 56px; font-size: 20px; font-weight: bold;
+    border: none; border-radius: 28px; background: #ffb300; color: #000; touch-action: none; }
+  #dash:active, #dash.on { background: #ff6f00; }
+  p { margin: 4px 8px; font-size: 13px; }
+  a { color: #75c8ff; }
+</style>
+</head>
+<body>
+<h2>鬼ごっこ</h2>
+<canvas id="c" width="600" height="400"></canvas>
+<button id="dash">DASH</button>
+<p>PC: 矢印キー/WASD・Shiftでダッシュ・Spaceでリスタート</p>
+<p>スマホ: 画面をドラッグで移動・DASHボタンでダッシュ・ゲームオーバー後に画面タップでリスタート</p>
+<p>⭐=鬼が遅くなる 👟=自分が速くなる 🪙=ボーナス点 / 10秒ごとに鬼が増える!</p>
+<p><a href="../">← トップへ戻る</a></p>
+
+<script>
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+const W = canvas.width, H = canvas.height;
+
+// ---- 設定 ----
+const ONI_INTERVAL = 10;
+const MAX_ONI = 6;
+const ITEM_INTERVAL = 5;
+const MAX_ITEMS = 3;
+const JOY_RADIUS = 50;
+
+// ---- 壁 ----
+const walls = [
+  { x: 150, y: 100, w: 20,  h: 160 },
+  { x: 330, y: 240, w: 160, h: 20 },
+  { x: 400, y: 60,  w: 20,  h: 120 },
+  { x: 200, y: 320, w: 120, h: 20 },
+];
+
+// ---- 状態 ----
+let player, onis, items, keys = {};
+let time, bonus, stamina, exhausted, slowTimer, speedTimer;
+let oniTimer, itemTimer, gameOver, gameOverAt, last;
+let best = 0;
+try { best = Number(localStorage.getItem("onigokko_best") || 0); } catch (e) {}
+
+let dashHeld = false;
+const joy = { active: false, id: null, ox: 0, oy: 0, x: 0, y: 0, dx: 0, dy: 0 };
+
+addEventListener("keydown", e => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === " ") { e.preventDefault(); tryRestart(); }
+});
+addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+function tryRestart() {
+  if (gameOver && performance.now() - gameOverAt > 500) reset();
+}
+
+function toCanvas(t) {
+  const r = canvas.getBoundingClientRect();
+  return { x: (t.clientX - r.left) * W / r.width, y: (t.clientY - r.top) * H / r.height,
+           sx: r.width / W };
+}
+
+canvas.addEventListener("touchstart", e => {
+  e.preventDefault();
+  if (gameOver) { tryRestart(); return; }
+  if (joy.active) return;
+  const t = e.changedTouches[0];
+  const p = toCanvas(t);
+  joy.active = true; joy.id = t.identifier;
+  joy.ox = joy.x = p.x; joy.oy = joy.y = p.y;
+  joy.dx = joy.dy = 0;
+}, { passive: false });
+
+canvas.addEventListener("touchmove", e => {
+  e.preventDefault();
+  for (const t of e.changedTouches) {
+    if (t.identifier !== joy.id) continue;
+    const p = toCanvas(t);
+    const maxR = JOY_RADIUS / p.sx;
+    let vx = p.x - joy.ox, vy = p.y - joy.oy;
+    const d = Math.hypot(vx, vy);
+    if (d > maxR) { vx = vx / d * maxR; vy = vy / d * maxR; }
+    joy.x = joy.ox + vx; joy.y = joy.oy + vy;
+    let nx = vx / maxR, ny = vy / maxR;
+    if (Math.hypot(nx, ny) < 0.2) nx = ny = 0;
+    joy.dx = nx; joy.dy = ny;
+  }
+}, { passive: false });
+
+function endTouch(e) {
+  e.preventDefault();
+  for (const t of e.changedTouches) {
+    if (t.identifier === joy.id) { joy.active = false; joy.id = null; joy.dx = joy.dy = 0; }
+  }
+}
+canvas.addEventListener("touchend", endTouch, { passive: false });
+canvas.addEventListener("touchcancel", endTouch, { passive: false });
+canvas.addEventListener("click", tryRestart);
+
+const dashBtn = document.getElementById("dash");
+const dashOn  = e => { e.preventDefault(); dashHeld = true;  dashBtn.classList.add("on"); };
+const dashOff = e => { e.preventDefault(); dashHeld = false; dashBtn.classList.remove("on"); };
+dashBtn.addEventListener("touchstart", dashOn, { passive: false });
+dashBtn.addEventListener("touchend", dashOff, { passive: false });
+dashBtn.addEventListener("touchcancel", dashOff, { passive: false });
+dashBtn.addEventListener("mousedown", dashOn);
+addEventListener("mouseup", () => { dashHeld = false; dashBtn.classList.remove("on"); });
+
+function reset() {
+  player = { x: 50, y: 50, r: 12, speed: 2.8 };
+  onis = [];
+  addOni();
+  items = [];
+  time = 0; bonus = 0;
+  stamina = 100; exhausted = false;
+  slowTimer = 0; speedTimer = 0;
+  oniTimer = 0; itemTimer = 0;
+  gameOver = false;
+  last = performance.now();
+}
+
+function score() { return Math.floor(time * 10) + bonus; }
+
+function hitsWall(x, y, r) {
+  for (const w of walls) {
+    const cx = Math.max(w.x, Math.min(x, w.x + w.w));
+    const cy = Math.max(w.y, Math.min(y, w.y + w.h));
+    if (Math.hypot(x - cx, y - cy) < r) return true;
+  }
+  return false;
+}
+
+function move(o, dx, dy) {
+  const bx = o.x, by = o.y;
+  if (!hitsWall(o.x + dx, o.y, o.r)) o.x += dx;
+  if (!hitsWall(o.x, o.y + dy, o.r)) o.y += dy;
+  o.x = Math.max(o.r, Math.min(W - o.r, o.x));
+  o.y = Math.max(o.r, Math.min(H - o.r, o.y));
+  return o.x !== bx || o.y !== by;
+}
+
+function randomFreePos(r) {
+  for (let i = 0; i < 100; i++) {
+    const x = r + Math.random() * (W - r * 2);
+    const y = r + Math.random() * (H - r * 2);
+    if (!hitsWall(x, y, r + 4)) return { x, y };
+  }
+  return { x: W / 2, y: H / 2 };
+}
+
+function addOni() {
+  if (onis.length >= MAX_ONI) return;
+  let p;
+  for (let i = 0; i < 50; i++) {
+    p = randomFreePos(16);
+    if (!player || Math.hypot(p.x - player.x, p.y - player.y) > 250) break;
+  }
+  onis.push({
+    x: p.x, y: p.y, r: 16, speed: 1.5,
+    smart: onis.length % 2 === 1,
+    side: Math.random() < 0.5 ? 1 : -1,
+  });
+}
+
+function addItem() {
+  if (items.length >= MAX_ITEMS) return;
+  const p = randomFreePos(12);
+  const type = ["star", "shoe", "coin"][Math.floor(Math.random() * 3)];
+  items.push({ x: p.x, y: p.y, r: 12, type });
+}
+
+function update(dt) {
+  time += dt;
+  oniTimer += dt;
+  itemTimer += dt;
+  slowTimer = Math.max(0, slowTimer - dt);
+  speedTimer = Math.max(0, speedTimer - dt);
+
+  if (oniTimer >= ONI_INTERVAL) { oniTimer = 0; addOni(); }
+  if (itemTimer >= ITEM_INTERVAL) { itemTimer = 0; addItem(); }
+
+  let dx = 0, dy = 0;
+  if (joy.active && (joy.dx || joy.dy)) {
+    dx = joy.dx; dy = joy.dy;
+  } else {
+    if (keys["arrowleft"]  || keys["a"]) dx -= 1;
+    if (keys["arrowright"] || keys["d"]) dx += 1;
+    if (keys["arrowup"]    || keys["w"]) dy -= 1;
+    if (keys["arrowdown"]  || keys["s"]) dy += 1;
+    if (dx && dy) { dx *= 0.707; dy *= 0.707; }
+  }
+
+  const wantDash = (keys["shift"] || dashHeld) && (dx || dy) && !exhausted;
+  if (wantDash) {
+    stamina -= 40 * dt;
+    if (stamina <= 0) { stamina = 0; exhausted = true; }
+  } else {
+    stamina = Math.min(100, stamina + 20 * dt);
+    if (exhausted && stamina > 30) exhausted = false;
+  }
+
+  let spd = player.speed;
+  if (wantDash) spd *= 1.6;
+  if (speedTimer > 0) spd *= 1.4;
+  move(player, dx * spd, dy * spd);
+
+  items = items.filter(it => {
+    if (Math.hypot(it.x - player.x, it.y - player.y) < it.r + player.r) {
+      if (it.type === "star") slowTimer = 5;
+      if (it.type === "shoe") speedTimer = 5;
+      if (it.type === "coin") bonus += 50;
+      return false;
+    }
+    return true;
+  });
+
+  for (const o of onis) {
+    let tx = player.x, ty = player.y;
+    if (o.smart) { tx += dx * 40; ty += dy * 40; }
+    const vx = tx - o.x, vy = ty - o.y;
+    const d = Math.hypot(vx, vy) || 1;
+    let sp = Math.min(2.8, o.speed + time * 0.01);
+    if (slowTimer > 0) sp *= 0.35;
+    const moved = move(o, vx / d * sp, vy / d * sp);
+    if (!moved) move(o, -vy / d * sp * o.side, vx / d * sp * o.side);
+
+    if (Math.hypot(player.x - o.x, player.y - o.y) < player.r + o.r) {
+      gameOver = true;
+      gameOverAt = performance.now();
+      joy.active = false; joy.dx = joy.dy = 0;
+      if (score() > best) {
+        best = score();
+        try { localStorage.setItem("onigokko_best", best); } catch (e) {}
+      }
+    }
+  }
+}
+
+function circle(x, y, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.fillStyle = "#5d4037";
+  walls.forEach(w => ctx.fillRect(w.x, w.y, w.w, w.h));
+
+  ctx.font = "20px sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  const icons = { star: "⭐", shoe: "👟", coin: "🪙" };
+  items.forEach(it => ctx.fillText(icons[it.type], it.x, it.y));
+
+  onis.forEach(o => {
+    circle(o.x, o.y, o.r, slowTimer > 0 ? "#ef9a9a" : (o.smart ? "#8e24aa" : "#e53935"));
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(o.x - 8, o.y - 18, 4, 8);
+    ctx.fillRect(o.x + 4, o.y - 18, 4, 8);
+  });
+
+  circle(player.x, player.y, player.r, speedTimer > 0 ? "#ffee58" : "#4fc3f7");
+
+  if (joy.active) {
+    const sx = canvas.getBoundingClientRect().width / W;
+    ctx.globalAlpha = 0.35;
+    circle(joy.ox, joy.oy, JOY_RADIUS / sx, "#fff");
+    ctx.globalAlpha = 0.7;
+    circle(joy.x, joy.y, 16 / sx, "#fff");
+    ctx.globalAlpha = 1;
+  }
+
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = "#fff";
+  ctx.font = "16px sans-serif";
+  ctx.fillText("スコア: " + score(), 10, 22);
+  ctx.fillText("ベスト: " + best, 10, 42);
+  ctx.fillText("鬼: " + onis.length, 10, 62);
+  if (slowTimer > 0)  ctx.fillText("⭐ " + slowTimer.toFixed(1), 10, 82);
+  if (speedTimer > 0) ctx.fillText("👟 " + speedTimer.toFixed(1), 10, 102);
+
+  ctx.fillStyle = "#000";
+  ctx.fillRect(W - 130, 10, 120, 12);
+  ctx.fillStyle = exhausted ? "#e53935" : "#ffeb3b";
+  ctx.fillRect(W - 130, 10, 120 * stamina / 100, 12);
+  ctx.fillStyle = "#fff";
+  ctx.font = "12px sans-serif";
+  ctx.fillText("スタミナ", W - 130, 36);
+
+  if (gameOver) {
+    ctx.fillStyle = "rgba(0,0,0,0.65)";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.font = "32px sans-serif";
+    ctx.fillText("つかまった!", W / 2, 170);
+    ctx.font = "18px sans-serif";
+    ctx.fillText("スコア: " + score() + "  (ベスト: " + best + ")", W / 2, 210);
+    ctx.fillText("画面タップ / Spaceでもう一度", W / 2, 240);
+  }
+}
+
+function loop(now) {
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  if (!gameOver) update(dt);
+  draw();
+  requestAnimationFrame(loop);
+}
+
+reset();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
